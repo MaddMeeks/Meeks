@@ -185,7 +185,10 @@ function calculate() {
     document.getElementById("monthly").textContent = `Monthly Allowance Estimate: $${monthly.toFixed(2)}`;
 
     const ctx = document.getElementById('breakdownChart').getContext('2d');
-    new Chart(ctx, {
+    if (window.breakdownChart) {
+        window.breakdownChart.destroy();
+    }
+    window.breakdownChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: Array.from({length: years}, (_, i) => `Year ${i + 1}`),
@@ -199,15 +202,6 @@ function calculate() {
             responsive: true,
             plugins: {
                 title: { display: true, text: 'Growth Breakdown Over Time' }
-            },
-            animations: {
-                tension: {
-                    duration: 1000,
-                    easing: 'easeOutBounce',
-                    from: 1,
-                    to: 0,
-                    loop: true
-                }
             }
         }
     });

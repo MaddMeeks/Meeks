@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirement Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background: #f4f4f4;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+        }
+        label {
+            font-weight: bold;
+        }
+        button {
+            margin-top: 1rem;
+            padding: 0.7rem 1.5rem;
+            font-size: 1rem;
+        }
+        .results {
+            margin-top: 2rem;
+            background: #e8f5e9;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+        canvas {
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Retirement Calculator</h1>
+    <form id="retirementForm">
+        <label>Current Age:<input type="number" id="age" value="30"></label>
+        <label>Retirement Age:<input type="number" id="retirementAge" value="65"></label>
+
+        <h3>401K</h3>
+        <label>Current 401K Amount:<input type="number" id="current401K" value="0"></label>
+        <label>Employer Match %:<input type="number" id="employerMatch" value="3"></label>
+        <label>Total Contribution %:<input type="number" id="totalContribution" value="10"></label>
+        <label>401K Rate of Return %:<input type="number" id="rateOfReturn401K" value="7"></label>
+
+        <h3>Roth IRA</h3>
+        <label>Current Roth Amount:<input type="number" id="currentRoth" value="0"></label>
+        <label>Annual Roth Contribution:<input type="number" id="rothAnnualContribution" value="6500"></label>
+        <label>Roth Rate of Return %:<input type="number" id="rateOfReturnRoth" value="7"></label>
+
+        <h3>Other Investments</h3>
+        <label>Current Investment:<input type="number" id="currentOther" value="0"></label>
+        <label>Annual Contribution:<input type="number" id="otherAnnualContribution" value="0"></label>
+        <label>Other Investment Return %:<input type="number" id="rateOfReturnOther" value="7"></label>
+
+        <h3>Economic Factors</h3>
+        <label>Annual Salary:<input type="number" id="annualSalary" value="60000"></label>
+        <label>Salary Growth %:<input type="number" id="salaryGrowth" value="2"></label>
+        <label>Inflation %:<input type="number" id="inflation" value="2"></label>
+        <label>Tax Rate %:<input type="number" id="taxRate" value="25"></label>
+
+        <button type="button" onclick="calculate()">Calculate</button>
+    </form>
+
+    <div class="results" id="results" style="display:none">
+        <h3>Results</h3>
+        <p id="total"></p>
+        <p id="afterTax"></p>
+        <p id="adjusted"></p>
+        <p id="monthly"></p>
+        <canvas id="breakdownChart" width="400" height="200"></canvas>
+    </div>
+</div>
+
+<script>
+function futureValue(current, annual, rate, years) {
+    let history = [];
+    let value = current;
+    for (let i = 0; i < years; i++) {
+        value = (value + annual) * (1 + rate);
+        history.push(value);
+    }
+    return [value, history];
+}
+
+function calculate() {
+    const get = id => parseFloat(document.getElementById(id).value);
+
+    const age = get("age");
+    const retirementAge = get("retirementAge");
+    const years = retirementAge - age;
+
+    const annualSalary = get("annualSalary");
+    const totalContribution = get("totalContribution");
+    const rateOfReturn401K = get("rateOfReturn401K") / 100;
+    const current401K = get("current401K");
+    const annual401KContrib = annualSalary * (totalContribution / 100);
+
+    const [future401K, history401K] = futureValue(current401K, annual401KContrib, rateOfReturn401K, years);
+    const [futureRoth, historyRoth] = futureValue(get("currentRoth"), get("rothAnnualContribution"), get("rateOfReturnRoth") / 100, years);
+    const [futureOther, historyOther] = futureValue(get("currentOther"), get("otherAnnualContribution"), get("rateOfReturnOther") / 100, years);
+
+    const total = future401K + futureRoth + futureOther;
+    const afterTax = total * (1 - get("taxRate") / 100);
+    const adjusted = afterTax / Math.pow(1 + get("inflation") / 100, years);
+    const monthly = adjusted / ((85 - retirementAge) * 12);
+
+    document.getElementById("total").textContent = `Total at Retirement: $${total.toFixed(2)}`;
+    document.getElementById("afterTax").textContent = `After Tax: $${afterTax.toFixed(2)}`;
+    document.getElementById("adjusted").textContent = `Purchasing Power Today: $${adjusted.toFixed(2)}`;
+    document.getElementById("monthly").textContent = `Monthly Allowance Estimate: $${monthly.toFixed(2)}`;
+
+    const ctx = document.getElementById('breakdownChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: Array.from({length: years}, (_, i) => `Year ${i + 1}`),
+            datasets: [
+                { label: '401K', data: history401K, borderColor: 'blue', fill: false },
+                { label: 'Roth IRA', data: historyRoth, borderColor: 'green', fill: false },
+                { label: 'Other', data: historyOther, borderColor: 'orange', fill: false }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: { display: true, text: 'Growth Breakdown Over Time' }
+            }
+        }
+    });
+
+    document.getElementById("results").style.display = 'block';
+}
+</script>
+echo "# Meeks" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/MaddMeeks/Meeks.git
+git push -u origin main
+</body>
+</html>

@@ -104,8 +104,32 @@
     <h1>Retirement Calculator</h1>
     <p style="text-align:center"><a href="https://github.com/MaddMeeks/Meeks.git" target="_blank">View Source on GitHub</a></p>
     <form id="retirementForm">
-        <!-- Retirement Form Inputs (unchanged) -->
-        <!-- ... -->
+        <label>Current Age:<input type="number" id="age" value="30"></label>
+        <label>Retirement Age:<input type="number" id="retirementAge" value="65"></label>
+
+        <h3>401K</h3>
+        <label>Current 401K Amount:<input type="number" id="current401K" value="0"></label>
+        <label>Total Contribution % (include employer contributions):<input type="number" id="totalContribution" value="10"></label>
+        <label>401K Rate of Return %:<input type="number" id="rateOfReturn401K" value="7"></label>
+
+        <h3>Roth IRA</h3>
+        <label>Current Roth Amount:<input type="number" id="currentRoth" value="0"></label>
+        <label>Annual Roth Contribution:<input type="number" id="rothAnnualContribution" value="6500"></label>
+        <label>Roth Rate of Return %:<input type="number" id="rateOfReturnRoth" value="7"></label>
+
+        <h3>Other Investments</h3>
+        <label>Current Investment:<input type="number" id="currentOther" value="0"></label>
+        <label>Annual Contribution:<input type="number" id="otherAnnualContribution" value="0"></label>
+        <label>Other Investment Return %:<input type="number" id="rateOfReturnOther" value="7"></label>
+
+        <h3>Economic Factors</h3>
+        <label>Annual Salary:<input type="number" id="annualSalary" value="60000"></label>
+        <label>Salary Growth %:<input type="number" id="salaryGrowth" value="2"></label>
+        <label>Inflation %:<input type="number" id="inflation" value="2"></label>
+        <label>Tax Rate % (applies only to 401K):<input type="number" id="taxRate" value="25"></label>
+
+        <label>Life Expectancy:<input type="number" id="lifeExpectancy" value="85"></label>
+
         <button type="button" id="calculateBtn">Calculate</button>
     </form>
 
@@ -116,19 +140,6 @@
         <p id="adjusted"></p>
         <p id="monthly"></p>
         <canvas id="breakdownChart" width="400" height="200"></canvas>
-    </div>
-
-    <hr>
-    <h3 style="margin-top: 3rem; text-align: center;">Compound Interest Calculator</h3>
-    <form id="compoundForm">
-        <label>Initial Investment:<input type="number" id="compoundPrincipal" value="1000"></label>
-        <label>Annual Contribution:<input type="number" id="compoundAnnual" value="1000"></label>
-        <label>Annual Interest Rate %:<input type="number" id="compoundRate" value="5"></label>
-        <label>Years:<input type="number" id="compoundYears" value="20"></label>
-        <button type="button" onclick="calculateCompound()">Calculate Compound Interest</button>
-    </form>
-    <div class="results" id="compoundResults" style="display:none">
-        <p id="compoundTotal"></p>
     </div>
 </div>
 
@@ -144,7 +155,9 @@ function futureValue(current, annual, rate, years) {
 }
 
 function calculate() {
+    console.log("Calculate button clicked");
     const get = id => parseFloat(document.getElementById(id).value);
+
     const age = get("age");
     const retirementAge = get("retirementAge");
     const lifeExpectancy = get("lifeExpectancy");
@@ -167,14 +180,15 @@ function calculate() {
     const adjusted = total / Math.pow(1 + get("inflation") / 100, years);
     const monthly = adjusted / ((lifeExpectancy - retirementAge) * 12);
 
-    document.getElementById("results").style.display = 'block';
     document.getElementById("total").textContent = `Total at Retirement: $${total.toFixed(2)}`;
     document.getElementById("afterTax").textContent = `401K After Tax: $${afterTax401K.toFixed(2)}`;
     document.getElementById("adjusted").textContent = `Purchasing Power Today: $${adjusted.toFixed(2)}`;
     document.getElementById("monthly").textContent = `Monthly Allowance Estimate: $${monthly.toFixed(2)}`;
 
     const ctx = document.getElementById('breakdownChart').getContext('2d');
-    if (window.breakdownChart) window.breakdownChart.destroy();
+    if (window.breakdownChart) {
+        window.breakdownChart.destroy();
+    }
     window.breakdownChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -192,21 +206,11 @@ function calculate() {
             }
         }
     });
+
+    document.getElementById("results").style.display = 'block';
 }
 
-function calculateCompound() {
-    const P = parseFloat(document.getElementById("compoundPrincipal").value);
-    const A = parseFloat(document.getElementById("compoundAnnual").value);
-    const r = parseFloat(document.getElementById("compoundRate").value) / 100;
-    const n = parseFloat(document.getElementById("compoundYears").value);
-    let total = P;
-    for (let i = 0; i < n; i++) {
-        total = (total + A) * (1 + r);
-    }
-    document.getElementById("compoundResults").style.display = 'block';
-    document.getElementById("compoundTotal").textContent = `Compound Total After ${n} Years: $${total.toFixed(2)}`;
-}
-
+// Attach event listener to ensure click is recognized
 window.onload = () => {
     document.getElementById("calculateBtn").addEventListener("click", calculate);
 };

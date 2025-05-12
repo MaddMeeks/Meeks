@@ -4,56 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retirement Calculator</title>
+    <meta name="description" content="Interactive Retirement Calculator by Meeks">
+    <meta name="author" content="MaddMeeks">
+    <meta name="keywords" content="retirement calculator, 401k, roth IRA, investment, budget forecast">
+    <link rel="canonical" href="https://github.com/MaddMeeks/Meeks.git">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             padding: 2rem;
-            background: #f4f4f4;
+            background: linear-gradient(to right, #74ebd5, #ACB6E5);
+            color: #333;
         }
         .container {
-            max-width: 900px;
+            max-width: 950px;
             margin: 0 auto;
             background: white;
             padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
         input {
             width: 100%;
             padding: 0.5rem;
-            margin: 0.5rem 0;
+            margin: 0.3rem 0 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
         }
         label {
-            font-weight: bold;
+            font-weight: 600;
+            display: block;
+            margin-top: 1rem;
         }
         button {
-            margin-top: 1rem;
-            padding: 0.7rem 1.5rem;
+            margin-top: 1.5rem;
+            padding: 0.75rem 2rem;
             font-size: 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        h1, h3 {
+            text-align: center;
+            color: #2c3e50;
         }
         .results {
             margin-top: 2rem;
-            background: #e8f5e9;
+            background: #ecf9ec;
             padding: 1rem;
-            border-radius: 5px;
+            border-radius: 8px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
         }
         canvas {
             margin-top: 2rem;
+        }
+        a {
+            color: #007BFF;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>Retirement Calculator</h1>
+    <p style="text-align:center"><a href="https://github.com/MaddMeeks/Meeks.git" target="_blank">View Source on GitHub</a></p>
     <form id="retirementForm">
         <label>Current Age:<input type="number" id="age" value="30"></label>
         <label>Retirement Age:<input type="number" id="retirementAge" value="65"></label>
 
         <h3>401K</h3>
         <label>Current 401K Amount:<input type="number" id="current401K" value="0"></label>
-        <label>Employer Match %:<input type="number" id="employerMatch" value="3"></label>
-        <label>Total Contribution %:<input type="number" id="totalContribution" value="10"></label>
+        <label>Total Contribution % (include employer contributions):<input type="number" id="totalContribution" value="10"></label>
         <label>401K Rate of Return %:<input type="number" id="rateOfReturn401K" value="7"></label>
 
         <h3>Roth IRA</h3>
@@ -113,13 +141,15 @@ function calculate() {
     const [futureRoth, historyRoth] = futureValue(get("currentRoth"), get("rothAnnualContribution"), get("rateOfReturnRoth") / 100, years);
     const [futureOther, historyOther] = futureValue(get("currentOther"), get("otherAnnualContribution"), get("rateOfReturnOther") / 100, years);
 
-    const total = future401K + futureRoth + futureOther;
-    const afterTax = total * (1 - get("taxRate") / 100);
-    const adjusted = afterTax / Math.pow(1 + get("inflation") / 100, years);
+    const taxRate = get("taxRate") / 100;
+    const afterTax401K = future401K * (1 - taxRate);
+    const total = afterTax401K + futureRoth + futureOther;
+
+    const adjusted = total / Math.pow(1 + get("inflation") / 100, years);
     const monthly = adjusted / ((85 - retirementAge) * 12);
 
     document.getElementById("total").textContent = `Total at Retirement: $${total.toFixed(2)}`;
-    document.getElementById("afterTax").textContent = `After Tax: $${afterTax.toFixed(2)}`;
+    document.getElementById("afterTax").textContent = `401K After Tax: $${afterTax401K.toFixed(2)}`;
     document.getElementById("adjusted").textContent = `Purchasing Power Today: $${adjusted.toFixed(2)}`;
     document.getElementById("monthly").textContent = `Monthly Allowance Estimate: $${monthly.toFixed(2)}`;
 
@@ -145,12 +175,5 @@ function calculate() {
     document.getElementById("results").style.display = 'block';
 }
 </script>
-echo "# Meeks" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/MaddMeeks/Meeks.git
-git push -u origin main
 </body>
 </html>

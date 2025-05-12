@@ -17,6 +17,7 @@
             padding: 2rem;
             background: linear-gradient(to right, #74ebd5, #ACB6E5);
             color: #333;
+            animation: fadeIn 1s ease-in;
         }
         .container {
             max-width: 950px;
@@ -25,6 +26,12 @@
             padding: 2rem;
             border-radius: 15px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            animation: slideIn 1s ease-out;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+        .container:hover {
+            transform: scale(1.01);
+            box-shadow: 0 6px 30px rgba(0,0,0,0.2);
         }
         input {
             width: 100%;
@@ -32,25 +39,32 @@
             margin: 0.3rem 0 1rem;
             border: 1px solid #ccc;
             border-radius: 8px;
+            transition: box-shadow 0.3s ease;
+        }
+        input:focus {
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            outline: none;
         }
         label {
             font-weight: 600;
             display: block;
             margin-top: 1rem;
+            animation: fadeInUp 0.6s ease;
         }
         button {
             margin-top: 1.5rem;
             padding: 0.75rem 2rem;
             font-size: 1rem;
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, #00b894, #55efc4);
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: transform 0.2s ease, background 0.3s ease;
         }
         button:hover {
-            background-color: #45a049;
+            background: linear-gradient(135deg, #00cec9, #81ecec);
+            transform: scale(1.05);
         }
         h1, h3 {
             text-align: center;
@@ -62,12 +76,26 @@
             padding: 1rem;
             border-radius: 8px;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            animation: fadeIn 1s ease-in;
         }
         canvas {
             margin-top: 2rem;
+            animation: fadeIn 1s ease-in;
         }
         a {
             color: #007BFF;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -98,7 +126,9 @@
         <label>Annual Salary:<input type="number" id="annualSalary" value="60000"></label>
         <label>Salary Growth %:<input type="number" id="salaryGrowth" value="2"></label>
         <label>Inflation %:<input type="number" id="inflation" value="2"></label>
-        <label>Tax Rate %:<input type="number" id="taxRate" value="25"></label>
+        <label>Tax Rate % (applies only to 401K):<input type="number" id="taxRate" value="25"></label>
+
+        <label>Life Expectancy:<input type="number" id="lifeExpectancy" value="85"></label>
 
         <button type="button" onclick="calculate()">Calculate</button>
     </form>
@@ -129,6 +159,7 @@ function calculate() {
 
     const age = get("age");
     const retirementAge = get("retirementAge");
+    const lifeExpectancy = get("lifeExpectancy");
     const years = retirementAge - age;
 
     const annualSalary = get("annualSalary");
@@ -146,7 +177,7 @@ function calculate() {
     const total = afterTax401K + futureRoth + futureOther;
 
     const adjusted = total / Math.pow(1 + get("inflation") / 100, years);
-    const monthly = adjusted / ((85 - retirementAge) * 12);
+    const monthly = adjusted / ((lifeExpectancy - retirementAge) * 12);
 
     document.getElementById("total").textContent = `Total at Retirement: $${total.toFixed(2)}`;
     document.getElementById("afterTax").textContent = `401K After Tax: $${afterTax401K.toFixed(2)}`;
@@ -168,6 +199,15 @@ function calculate() {
             responsive: true,
             plugins: {
                 title: { display: true, text: 'Growth Breakdown Over Time' }
+            },
+            animations: {
+                tension: {
+                    duration: 1000,
+                    easing: 'easeOutBounce',
+                    from: 1,
+                    to: 0,
+                    loop: true
+                }
             }
         }
     });

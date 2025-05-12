@@ -130,7 +130,7 @@
 
         <label>Life Expectancy:<input type="number" id="lifeExpectancy" value="85"></label>
 
-        <button type="button" id="calculateBtn">Calculate</button>
+        <button type="button" onclick="calculate()">Calculate</button>
     </form>
 
     <div class="results" id="results" style="display:none">
@@ -155,7 +155,6 @@ function futureValue(current, annual, rate, years) {
 }
 
 function calculate() {
-    console.log("Calculate button clicked");
     const get = id => parseFloat(document.getElementById(id).value);
 
     const age = get("age");
@@ -209,11 +208,6 @@ function calculate() {
 
     document.getElementById("results").style.display = 'block';
 }
-
-// Attach event listener to ensure click is recognized
-window.onload = () => {
-    document.getElementById("calculateBtn").addEventListener("click", calculate);
-};
 </script>
 </body>
 </html>

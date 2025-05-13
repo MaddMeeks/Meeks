@@ -100,23 +100,21 @@
         <h3>401K</h3>
         <label>Current 401K Amount:<input type="number" id="current401K" value="0" min="0" required></label>
         <label>Total Contribution % (include employer contributions):<input type="number" id="totalContribution" value="10" min="0" required></label>
-        <label>401K Rate of Return %:<input type="number" id="rateOfReturn401K" value="7" min="0" required></label>
 
         <h3>Roth IRA</h3>
         <label>Current Roth Amount:<input type="number" id="currentRoth" value="0" min="0" required></label>
         <label>Annual Roth Contribution:<input type="number" id="rothAnnualContribution" value="6500" min="0" required></label>
-        <label>Roth Rate of Return %:<input type="number" id="rateOfReturnRoth" value="7" min="0" required></label>
 
         <h3>Other Investments</h3>
         <label>Current Investment:<input type="number" id="currentOther" value="0" min="0" required></label>
         <label>Annual Contribution:<input type="number" id="otherAnnualContribution" value="0" min="0" required></label>
-        <label>Other Investment Return %:<input type="number" id="rateOfReturnOther" value="7" min="0" required></label>
 
         <h3>Economic Factors</h3>
         <label>Annual Salary:<input type="number" id="annualSalary" value="60000" min="0" required></label>
         <label>Salary Growth %:<input type="number" id="salaryGrowth" value="2" min="0" required></label>
         <label>Inflation %:<input type="number" id="inflation" value="2" min="0" required></label>
         <label>Tax Rate %:<input type="number" id="taxRate" value="25" min="0" required></label>
+        <label>Rate of Return % (For 401K, Roth IRA, Other Investments):<input type="number" id="rateOfReturn" value="7" min="0" required></label>
 
         <button type="button" onclick="calculate()">Calculate</button>
     </form>
@@ -161,16 +159,16 @@ function calculate() {
     const salaryGrowth = get("salaryGrowth") / 100;
     const inflation = get("inflation") / 100;
     const taxRate = get("taxRate") / 100;
+    const rateOfReturn = get("rateOfReturn") / 100;
 
     // 401K with growing salary
     let salary = get("annualSalary");
     const totalContribution = get("totalContribution") / 100;
-    const rateOfReturn401K = get("rateOfReturn401K") / 100;
     const current401K = get("current401K");
 
     const [future401K, history401K] = futureValueWithGrowth(
         current401K,
-        rateOfReturn401K,
+        rateOfReturn,
         years,
         year => salary * Math.pow(1 + salaryGrowth, year) * totalContribution
     );
@@ -181,7 +179,7 @@ function calculate() {
     // Roth
     const [futureRoth, historyRoth] = futureValueWithGrowth(
         get("currentRoth"),
-        get("rateOfReturnRoth") / 100,
+        rateOfReturn,
         years,
         () => get("rothAnnualContribution")
     );
@@ -190,7 +188,7 @@ function calculate() {
     // Other Investments
     const [futureOther, historyOther] = futureValueWithGrowth(
         get("currentOther"),
-        get("rateOfReturnOther") / 100,
+        rateOfReturn,
         years,
         () => get("otherAnnualContribution")
     );

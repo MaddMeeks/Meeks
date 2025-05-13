@@ -107,12 +107,6 @@
             padding: 0.5rem 1rem;
             border-radius: 8px;
         }
-
-        .note {
-            font-size: 0.8rem;
-            color: #555;
-            margin-top: -10px;
-        }
     </style>
 </head>
 <body>
@@ -126,7 +120,6 @@
     <form id="retirementForm">
         <label>Current Age:<input type="number" id="age" value="30"></label>
         <label>Retirement Age:<input type="number" id="retirementAge" value="65"></label>
-        <label>Expected Age To Live:<input type="number" id="expectedAge" value="95"></label>
 
         <h3>401K</h3>
         <label>Current 401K Amount:<input type="number" id="current401K" value="0"></label>
@@ -159,8 +152,7 @@
         <p id="totalOther"></p>
         <p id="grandTotal"></p>
         <p id="adjustedTotal"></p>
-        <p id="monthlyAllowance"></p>
-        <p class="note">Accounted for inflation increase each year.</p>
+        <p id="monthly"></p>
         <canvas id="breakdownChart" width="400" height="200"></canvas>
     </div>
 </div>
@@ -185,8 +177,7 @@ function calculate() {
     const get = id => parseFloat(document.getElementById(id).value);
     const age = get("age");
     const retirementAge = get("retirementAge");
-    const expectedAge = get("expectedAge");
-    const years = expectedAge - retirementAge;
+    const years = retirementAge - age;
 
     const salaryGrowth = get("salaryGrowth") / 100;
     const inflation = get("inflation") / 100;
@@ -225,14 +216,14 @@ function calculate() {
 
     const total = afterTax401K + futureRoth + futureOther;
     const adjusted = adjusted401K + adjustedRoth + adjustedOther;
-    const monthlyAllowance = adjusted / ((expectedAge - retirementAge) * 12);
+    const monthly = adjusted / ((85 - retirementAge) * 12);
 
     document.getElementById("total401k").textContent = `401K After Tax: ${formatCurrency(afterTax401K)} (Adj: ${formatCurrency(adjusted401K)})`;
     document.getElementById("totalRoth").textContent = `Roth IRA: ${formatCurrency(futureRoth)} (Adj: ${formatCurrency(adjustedRoth)})`;
     document.getElementById("totalOther").textContent = `Other Investments: ${formatCurrency(futureOther)} (Adj: ${formatCurrency(adjustedOther)})`;
     document.getElementById("grandTotal").textContent = `Total at Retirement: ${formatCurrency(total)}`;
     document.getElementById("adjustedTotal").textContent = `Purchasing Power Today: ${formatCurrency(adjusted)}`;
-    document.getElementById("monthlyAllowance").textContent = `Monthly Allowance Estimate: ${formatCurrency(monthlyAllowance)}`;
+    document.getElementById("monthly").textContent = `Monthly Allowance Estimate: ${formatCurrency(monthly)}`;
 
     const ctx = document.getElementById('breakdownChart').getContext('2d');
     new Chart(ctx, {

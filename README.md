@@ -12,20 +12,37 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
+        :root {
+            --bg-color: white;
+            --text-color: #333;
+            --container-bg: white;
+            --result-bg: #ecf9ec;
+        }
+
+        body.dark {
+            --bg-color: #1e1e1e;
+            --text-color: #eee;
+            --container-bg: #2c2c2c;
+            --result-bg: #333;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             padding: 2rem;
-            background: linear-gradient(to right, #74ebd5, #ACB6E5);
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background 0.3s, color 0.3s;
         }
+
         .container {
             max-width: 950px;
             margin: 0 auto;
-            background: white;
+            background: var(--container-bg);
             padding: 2rem;
             border-radius: 15px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
+
         input {
             width: 100%;
             padding: 0.5rem;
@@ -33,11 +50,13 @@
             border: 1px solid #ccc;
             border-radius: 8px;
         }
+
         label {
             font-weight: 600;
             display: block;
             margin-top: 1rem;
         }
+
         button {
             margin-top: 1.5rem;
             padding: 0.75rem 2rem;
@@ -49,35 +68,65 @@
             cursor: pointer;
             transition: background 0.3s ease;
         }
+
         button:hover {
             background-color: #45a049;
         }
+
         h1, h3 {
             text-align: center;
-            color: #2c3e50;
+            color: var(--text-color);
         }
+
         .results {
             margin-top: 2rem;
-            background: #ecf9ec;
+            background: var(--result-bg);
             padding: 1rem;
             border-radius: 8px;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
         }
+
         canvas {
             margin-top: 2rem;
         }
+
         a {
             color: #007BFF;
+        }
+
+        .dark-toggle {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+        }
+
+        .dark-toggle button {
+            background-color: #444;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .note {
+            font-size: 0.8rem;
+            color: #555;
+            margin-top: -10px;
         }
     </style>
 </head>
 <body>
+<div class="dark-toggle">
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+</div>
+
 <div class="container">
     <h1>Retirement Calculator</h1>
     <p style="text-align:center"><a href="https://github.com/MaddMeeks/Meeks.git" target="_blank">View Source on GitHub</a></p>
     <form id="retirementForm">
         <label>Current Age:<input type="number" id="age" value="30"></label>
         <label>Retirement Age:<input type="number" id="retirementAge" value="65"></label>
+        <label>Expected Age To Live:<input type="number" id="expectedAge" value="95"></label>
 
         <h3>401K</h3>
         <label>Current 401K Amount:<input type="number" id="current401K" value="0"></label>
@@ -110,7 +159,8 @@
         <p id="totalOther"></p>
         <p id="grandTotal"></p>
         <p id="adjustedTotal"></p>
-        <p id="monthly"></p>
+        <p id="monthlyAllowance"></p>
+        <p class="note">Accounted for inflation increase each year.</p>
         <canvas id="breakdownChart" width="400" height="200"></canvas>
     </div>
 </div>
@@ -127,17 +177,21 @@ function futureValueWithGrowth(current, rate, years, contributionFunc) {
     return [value, history];
 }
 
+function formatCurrency(num) {
+    return num.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+}
+
 function calculate() {
     const get = id => parseFloat(document.getElementById(id).value);
     const age = get("age");
     const retirementAge = get("retirementAge");
-    const years = retirementAge - age;
+    const expectedAge = get("expectedAge");
+    const years = expectedAge - retirementAge;
 
     const salaryGrowth = get("salaryGrowth") / 100;
     const inflation = get("inflation") / 100;
     const taxRate = get("taxRate") / 100;
 
-    // 401K with growing salary
     let salary = get("annualSalary");
     const totalContribution = get("totalContribution") / 100;
     const rateOfReturn401K = get("rateOfReturn401K") / 100;
@@ -153,7 +207,6 @@ function calculate() {
     const afterTax401K = future401K * (1 - taxRate);
     const adjusted401K = afterTax401K / Math.pow(1 + inflation, years);
 
-    // Roth
     const [futureRoth, historyRoth] = futureValueWithGrowth(
         get("currentRoth"),
         get("rateOfReturnRoth") / 100,
@@ -162,7 +215,6 @@ function calculate() {
     );
     const adjustedRoth = futureRoth / Math.pow(1 + inflation, years);
 
-    // Other Investments
     const [futureOther, historyOther] = futureValueWithGrowth(
         get("currentOther"),
         get("rateOfReturnOther") / 100,
@@ -171,17 +223,16 @@ function calculate() {
     );
     const adjustedOther = futureOther / Math.pow(1 + inflation, years);
 
-    // Results
     const total = afterTax401K + futureRoth + futureOther;
     const adjusted = adjusted401K + adjustedRoth + adjustedOther;
-    const monthly = adjusted / ((85 - retirementAge) * 12);
+    const monthlyAllowance = adjusted / ((expectedAge - retirementAge) * 12);
 
-    document.getElementById("total401k").textContent = `401K After Tax: $${afterTax401K.toFixed(2)} (Adj: $${adjusted401K.toFixed(2)})`;
-    document.getElementById("totalRoth").textContent = `Roth IRA: $${futureRoth.toFixed(2)} (Adj: $${adjustedRoth.toFixed(2)})`;
-    document.getElementById("totalOther").textContent = `Other Investments: $${futureOther.toFixed(2)} (Adj: $${adjustedOther.toFixed(2)})`;
-    document.getElementById("grandTotal").textContent = `Total at Retirement: $${total.toFixed(2)}`;
-    document.getElementById("adjustedTotal").textContent = `Purchasing Power Today: $${adjusted.toFixed(2)}`;
-    document.getElementById("monthly").textContent = `Monthly Allowance Estimate: $${monthly.toFixed(2)}`;
+    document.getElementById("total401k").textContent = `401K After Tax: ${formatCurrency(afterTax401K)} (Adj: ${formatCurrency(adjusted401K)})`;
+    document.getElementById("totalRoth").textContent = `Roth IRA: ${formatCurrency(futureRoth)} (Adj: ${formatCurrency(adjustedRoth)})`;
+    document.getElementById("totalOther").textContent = `Other Investments: ${formatCurrency(futureOther)} (Adj: ${formatCurrency(adjustedOther)})`;
+    document.getElementById("grandTotal").textContent = `Total at Retirement: ${formatCurrency(total)}`;
+    document.getElementById("adjustedTotal").textContent = `Purchasing Power Today: ${formatCurrency(adjusted)}`;
+    document.getElementById("monthlyAllowance").textContent = `Monthly Allowance Estimate: ${formatCurrency(monthlyAllowance)}`;
 
     const ctx = document.getElementById('breakdownChart').getContext('2d');
     new Chart(ctx, {
@@ -203,6 +254,10 @@ function calculate() {
     });
 
     document.getElementById("results").style.display = 'block';
+}
+
+function toggleDarkMode() {
+    document.body.classList.toggle("dark");
 }
 </script>
 </body>

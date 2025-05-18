@@ -106,7 +106,7 @@
             <input type="number" id="retirementAge" class="form-control" required>
           </div>
           <div class="col-md-4">
-            <label for="endAge" class="form-label">Expected End Age</label>
+            <label for="endAge" class="form-label">Expected Age of Life</label>
             <input type="number" id="endAge" class="form-control" required>
           </div>
 
@@ -115,19 +115,19 @@
             <input type="number" id="annualSalary" class="form-control" required>
           </div>
           <div class="col-md-4">
-            <label for="salaryGrowth" class="form-label">Annual Salary Growth (%)</label>
+            <label for="salaryGrowth" class="form-label">Annual Salary Growth (%) <small>Avg: 3%</small> </label>
             <input type="number" id="salaryGrowth" class="form-control" required>
           </div>
           <div class="col-md-4">
-            <label for="inflation" class="form-label">Inflation Rate (%)</label>
+            <label for="inflation" class="form-label">Inflation Rate (%) <small>Avg: 3%</small> </label>
             <input type="number" id="inflation" class="form-control" required>
           </div>
           <div class="col-md-4">
-            <label for="taxRate" class="form-label">Tax Rate (%)</label>
+            <label for="taxRate" class="form-label">Tax Rate (%) <small>Avg: 25%</small> </label>
             <input type="number" id="taxRate" class="form-control" required>
           </div>
           <div class="col-md-4">
-            <label for="rateOfReturn" class="form-label">Annual Return Rate (%)</label>
+            <label for="rateOfReturn" class="form-label">Annual Market Return (%) <small>Avg: 7%</small> </label>
             <input type="number" id="rateOfReturn" class="form-control" required>
           </div>
 
@@ -136,7 +136,7 @@
             <input type="number" id="current401K" class="form-control" required>
           </div>
           <div class="col-md-4">
-            <label for="totalContribution" class="form-label">401K Contribution (% of Salary)</label>
+            <label for="totalContribution" class="form-label">401K Contribution (%) <small>including employer contribution</small> </label>
             <input type="number" id="totalContribution" class="form-control" required>
           </div>
 
@@ -284,7 +284,7 @@ const monthlyWithdrawalAfterTax = monthlyWithdrawalBeforeTax; // Already account
   document.getElementById("totalOther").textContent = `Other Investments Balance at Retirement: $${balanceOther.toFixed(2)}`;
   document.getElementById("grandTotal").textContent = `Total Savings at Retirement: $${totalAtRetirement.toFixed(2)}`;
   document.getElementById("adjustedTotal").textContent = `Inflation Adjusted Total (Present Value): $${adjustedTotal.toFixed(2)}`;
-  document.getElementById("monthly").textContent = `Estimated Monthly Withdrawal (After Tax): $${monthlyWithdrawalAfterTax.toFixed(2)}`;
+  document.getElementById("monthly").textContent = `Estimated Monthly Withdrawal (Present Value): $${monthlyWithdrawalAfterTax.toFixed(2)}`;
 
   // Prepare chart data
   const ctx = document.getElementById('breakdownChart').getContext('2d');

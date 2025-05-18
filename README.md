@@ -7,7 +7,7 @@
   <meta name="description" content="Interactive Retirement Calculator by Meeks">
   <meta name="author" content="MaddMeeks">
   <meta name="keywords" content="retirement calculator, 401k, roth IRA, investment, budget forecast">
-  <link rel="canonical" href="https://github.com/MaddMeeks/Meeks.git">
+  <link rel="canonical" href="https://github.com/MaddMeeks/Meeks">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPDF/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
@@ -201,8 +201,12 @@
 let chart;
 
 function toggleDarkMode() {
-  document.body.classList.toggle("dark-mode");
+  const body = document.body;
+  body.classList.toggle("dark-mode");
+  const btn = document.querySelector('button[onclick="toggleDarkMode()"]');
+  btn.textContent = body.classList.contains("dark-mode") ? "☀️" : "🌙";
 }
+
 
 function calculate() {
   // Read inputs and parse as floats

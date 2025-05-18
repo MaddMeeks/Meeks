@@ -97,63 +97,63 @@
       <!-- Input form content -->
       <form onsubmit="event.preventDefault(); calculate();">
         <div class="row g-3">
-          <div class="col-md-4">
+          <div class="col-12 col-md-6 col-lg-4">
             <label for="age" class="form-label">Current Age</label>
             <input type="number" id="age" class="form-control" required>
           </div>
-          <div class="col-md-4">
+          <div class="col-12 col-md-6 col-lg-4">
             <label for="retirementAge" class="form-label">Retirement Age</label>
             <input type="number" id="retirementAge" class="form-control" required>
           </div>
-          <div class="col-md-4">
+          <div class="col-12 col-md-6 col-lg-4">
             <label for="endAge" class="form-label">Expected Age of Life</label>
             <input type="number" id="endAge" class="form-control" required>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-12 col-md-6 col-lg-4">
             <label for="annualSalary" class="form-label">Current Annual Salary</label>
             <input type="number" id="annualSalary" class="form-control" step="any" required>
           </div>
-          <div class="col-md-4">
+          <div class="col-12 col-md-6 col-lg-4">
             <label for="salaryGrowth" class="form-label">Annual Salary Growth (%) <small>Avg: 3%</small> </label>
             <input type="number" id="salaryGrowth" class="form-control" step="any" required>
           </div>
-          <div class="col-md-4">
-            <label for="inflation" class="form-label">Inflation Rate (%) <small>Avg: 3%</small> </label>
+          <div class="col-12 col-md-6 col-lg-4">
+            <label for="inflation" class="form-label">Inflation Rate (%) <small>Avg: 2-3%</small> </label>
             <input type="number" id="inflation" class="form-control" step="any" required>
           </div>
-          <div class="col-md-4">
-            <label for="taxRate" class="form-label">Tax Rate (%) <small>Avg: 25%</small> </label>
+          <div class="col-12 col-md-6 col-lg-4">
+            <label for="taxRate" class="form-label">Tax Rate (%) <small>Avg: 15-20%</small> </label>
             <input type="number" id="taxRate" class="form-control" step="any" required>
           </div>
-          <div class="col-md-4">
-            <label for="rateOfReturn" class="form-label">Annual Market Return (%) <small>Avg: 7%</small> </label>
+          <div class="col-12 col-md-6 col-lg-4">
+            <label for="rateOfReturn" class="form-label">Annual Market Return (%) <small>Avg: 6-10%</small> </label>
             <input type="number" id="rateOfReturn" class="form-control" step="any" required>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-12 col-md-6 col-lg-4">
             <label for="current401K" class="form-label">Current 401K Balance</label>
             <input type="number" id="current401K" class="form-control" step="any" required>
           </div>
-          <div class="col-md-4">
+          <div class="col-12 col-md-6 col-lg-4">
             <label for="totalContribution" class="form-label">401K Contribution (%) <small>including employer contribution</small> </label>
             <input type="number" id="totalContribution" class="form-control" step="any" required>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-12 col-md-6 col-lg-4">
             <label for="currentRoth" class="form-label">Current Roth IRA Balance</label>
             <input type="number" id="currentRoth" class="form-control" step="any" required>
           </div>
-          <div class="col-md-4">
+          <div class="col-12 col-md-6 col-lg-4">
             <label for="rothAnnualContribution" class="form-label">Annual Roth IRA Contribution</label>
             <input type="number" id="rothAnnualContribution" class="form-control" step="any" required>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-12 col-md-6 col-lg-4">
             <label for="currentOther" class="form-label">Current Other Investments</label>
             <input type="number" id="currentOther" class="form-control" step="any" required>
           </div>
-          <div class="col-md-4">
+          <div class="col-12 col-md-6 col-lg-4">
             <label for="otherAnnualContribution" class="form-label">Annual Other Investment Contribution</label>
             <input type="number" id="otherAnnualContribution" class="form-control" step="any" required>
           </div>
@@ -282,7 +282,7 @@ const monthlyWithdrawalAfterTax = monthlyWithdrawalBeforeTax; // Already account
   document.getElementById("total401k").textContent = `401K Balance at Retirement (After Tax): $${afterTax401K.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   document.getElementById("totalRoth").textContent = `Roth IRA Balance at Retirement: $${balanceRoth.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   document.getElementById("totalOther").textContent = `Other Investments Balance at Retirement: $${balanceOther.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  document.getElementById("grandTotal").textContent = `Total Savings at Retirement: $${totalAtRetirement.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  document.getElementById("grandTotal").textContent = `Total Savings at Retirement (After Tax): $${totalAtRetirement.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   document.getElementById("adjustedTotal").textContent = `Inflation Adjusted Total (Present Value): $${adjustedTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   document.getElementById("monthly").textContent = `Estimated Monthly Withdrawal (Present Value): $${monthlyWithdrawalAfterTax.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
@@ -300,7 +300,7 @@ const monthlyWithdrawalAfterTax = monthlyWithdrawalBeforeTax; // Already account
       labels: ['401K', 'Roth IRA', 'Other Investments'],
       datasets: [{
         label: 'Investment Breakdown',
-        data: [balance401K.toFixed(2), balanceRoth.toFixed(2), balanceOther.toFixed(2)],
+        data: [afterTax401K.toFixed(2), balanceRoth.toFixed(2), balanceOther.toFixed(2)],
         backgroundColor: [
           'rgba(75, 192, 192, 0.6)',
           'rgba(255, 159, 64, 0.6)',
@@ -356,19 +356,26 @@ function downloadPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  doc.setFontSize(18);
-  doc.text("Retirement Calculator Results", 10, 20);
+  doc.setFontSize(16);
+  doc.text("Retirement Calculator Results", 10, 10);
 
-  doc.setFontSize(12);
-  doc.text(document.getElementById("total401k").textContent, 10, 40);
-  doc.text(document.getElementById("totalRoth").textContent, 10, 50);
-  doc.text(document.getElementById("totalOther").textContent, 10, 60);
-  doc.text(document.getElementById("grandTotal").textContent, 10, 70);
-  doc.text(document.getElementById("adjustedTotal").textContent, 10, 80);
-  doc.text(document.getElementById("monthly").textContent, 10, 90);
+  let y = 20;
+  [
+    "total401k",
+    "totalRoth",
+    "totalOther",
+    "grandTotal",
+    "adjustedTotal",
+    "monthly"
+  ].forEach(id => {
+    const text = document.getElementById(id).textContent;
+    doc.text(text, 10, y);
+    y += 10;
+  });
 
   doc.save("retirement_results.pdf");
 }
+
 
 function downloadJSON() {
   const data = {

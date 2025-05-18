@@ -264,19 +264,22 @@ function calculate() {
     balanceOther = (balanceOther + otherAnnualContribution) * (1 + rateOfReturn);
   }
 
-  // Combine totals at retirement
-  const totalAtRetirement = balance401K + balanceRoth + balanceOther;
+// Apply tax to 401K at retirement
+const afterTax401K = balance401K * (1 - taxRate);
 
-  // Adjusted total factoring in inflation to present value (simple)
-  const adjustedTotal = totalAtRetirement / Math.pow(1 + inflation, yearsToRetirement);
+// Combine totals at retirement using after-tax 401K
+const totalAtRetirement = afterTax401K + balanceRoth + balanceOther;
 
-  // Monthly withdrawal over retirement years, adjusted for inflation and tax
-  // Assume even withdrawal over retirement period, adjusted for tax rate
-  const monthlyWithdrawalBeforeTax = totalAtRetirement / (yearsInRetirement * 12);
-  const monthlyWithdrawalAfterTax = monthlyWithdrawalBeforeTax * (1 - taxRate);
+// Adjusted total factoring in inflation to present value
+const adjustedTotal = totalAtRetirement / Math.pow(1 + inflation, yearsToRetirement);
+
+// Monthly withdrawal over retirement years
+const monthlyWithdrawalBeforeTax = totalAtRetirement / (yearsInRetirement * 12);
+const monthlyWithdrawalAfterTax = monthlyWithdrawalBeforeTax; // Already accounted for tax in 401K
+
 
   // Output to results fields
-  document.getElementById("total401k").textContent = `401K Balance at Retirement: $${balance401K.toFixed(2)}`;
+  document.getElementById("total401k").textContent = `401K Balance at Retirement (After Tax): $${afterTax401K.toFixed(2)}`;
   document.getElementById("totalRoth").textContent = `Roth IRA Balance at Retirement: $${balanceRoth.toFixed(2)}`;
   document.getElementById("totalOther").textContent = `Other Investments Balance at Retirement: $${balanceOther.toFixed(2)}`;
   document.getElementById("grandTotal").textContent = `Total Savings at Retirement: $${totalAtRetirement.toFixed(2)}`;

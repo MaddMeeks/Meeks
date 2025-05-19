@@ -328,8 +328,9 @@ const totalAtRetirement = afterTax401K + balanceRoth + balanceOther;
 const adjustedTotal = totalAtRetirement / Math.pow(1 + inflation, yearsToRetirement);
 
 // Monthly withdrawal over retirement years
-monthlyWithdrawalBeforeTax = (adjustedTotal * (rateOfReturn - inflation)) / (
+const monthlyWithdrawalBeforeTax = (adjustedTotal * (rateOfReturn - inflation)) / (
   1 - Math.pow((1 + inflation) / (1 + rateOfReturn), yearsInRetirement)) / 12;
+const monthlyWithdrawalAfterTax = monthlyWithdrawalBeforeTax; // Already accounted for tax in 401K
 
 
   // Output to results fields

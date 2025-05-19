@@ -73,13 +73,49 @@
       font-weight: 600;
       color: var(--primary-dark);
     }
+
+     .brand-logo {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #555;
+      font-style: italic;
+    }
+
+    .result-card {
+      border-left: 5px solid var(--primary-dark);
+      background-color: #eafaf1;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .result-card h5 {
+      font-weight: 600;
+    }
+
+    .dark-mode .result-card {
+      background-color: #244130;
+      border-color: #3aa06b;
+    }
+
+    .dark-mode .subtitle {
+      color: #ccc;
+	}
   </style>
 </head>
 <body>
 <div class="container py-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="text-center flex-grow-1">Retirement Calculator</h1>
-    <button class="btn btn-outline-secondary ms-3" onclick="toggleDarkMode()">🌙</button>
+   <div class="text-center mb-4">
+    <div class="brand-logo">Meeks</div>
+    <div class="subtitle">Retirement Calculator</div>
+    <a href="https://github.com/MaddMeeks/Meeks.git" target="_blank" class="d-block mt-2">View Source on GitHub</a>
+    <button class="btn btn-outline-secondary mt-3" onclick="toggleDarkMode()">🌙</button>
   </div>
   <p class="text-center"><a href="https://github.com/MaddMeeks/Meeks.git" target="_blank">View Source on GitHub</a></p>
 
@@ -179,15 +215,30 @@
 
     <div class="tab-pane fade" id="results" role="tabpanel">
       <div class="highlight-box">
-        <h4 class="cta">Results Summary</h4>
+        <h4 class="cta mb-3">Results Summary</h4>
         <p id="total401k"></p>
         <p id="totalRoth"></p>
         <p id="totalOther"></p>
-        <p id="grandTotal"></p>
-        <p id="adjustedTotal"></p>
-        <p id="monthly"></p>
+        
+        <!-- Highlighted Results -->
+        <div class="result-card">
+          <h5>Total Savings at Retirement (After Tax)</h5>
+          <p id="grandTotal" class="mb-0 fs-5 fw-bold text-success"></p>
+        </div>
+
+        <div class="result-card">
+          <h5>Inflation Adjusted Total (Present Value)</h5>
+          <p id="adjustedTotal" class="mb-0 fs-5 fw-bold text-success"></p>
+        </div>
+
+        <div class="result-card">
+          <h5>Estimated Monthly Withdrawal (Present Value)</h5>
+          <p id="monthly" class="mb-0 fs-5 fw-bold text-success"></p>
+        </div>
       </div>
+
       <canvas id="breakdownChart" width="400" height="200"></canvas>
+
       <div class="mt-4 d-flex gap-2">
         <button class="btn btn-outline-primary" onclick="downloadCSV()">Download CSV</button>
         <button class="btn btn-outline-danger" onclick="downloadPDF()">Download PDF</button>

@@ -328,9 +328,9 @@ const totalAtRetirement = afterTax401K + balanceRoth + balanceOther;
 const adjustedTotal = totalAtRetirement / Math.pow(1 + inflation, yearsToRetirement);
 
 // Monthly withdrawal over retirement years
-const monthlyWithdrawalBeforeTax = (adjustedTotal * (rateOfReturn - inflation)) / (
-  1 - Math.pow((1 + inflation) / (1 + rateOfReturn), yearsInRetirement)) / 12;
-const monthlyWithdrawalAfterTax = monthlyWithdrawalBeforeTax; // Already accounted for tax in 401K
+const realRate = (1 + rateOfReturn) / (1 + inflation) - 1;
+const monthlyWithdrawal = (adjustedTotal * realRate) /
+  (1 - Math.pow(1 + realRate, -yearsInRetirement)) / 12;
 
 
   // Output to results fields
@@ -339,7 +339,8 @@ const monthlyWithdrawalAfterTax = monthlyWithdrawalBeforeTax; // Already account
   document.getElementById("totalOther").textContent = `Other Investments Balance at Retirement: $${balanceOther.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   document.getElementById("grandTotal").textContent = `Total Savings at Retirement (After Tax): $${totalAtRetirement.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   document.getElementById("adjustedTotal").textContent = `Inflation Adjusted Total (Present Value): $${adjustedTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  document.getElementById("monthly").textContent = `Estimated Monthly Withdrawal (Present Value): $${monthlyWithdrawalAfterTax.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  document.getElementById("monthly").textContent = `Estimated Monthly Withdrawal (Present Value): $${monthlyWithdrawal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
 
   // Prepare chart data
   const ctx = document.getElementById('breakdownChart').getContext('2d');

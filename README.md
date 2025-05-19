@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Retirement Calculator</title>
   <meta name="description" content="Interactive Retirement Calculator by Meeks">
   <meta name="author" content="MaddMeeks">
@@ -117,7 +116,6 @@
     <a href="https://github.com/MaddMeeks/Meeks.git" target="_blank" class="d-block mt-2">View Source on GitHub</a>
     <button class="btn btn-outline-secondary mt-3" onclick="toggleDarkMode()">🌙</button>
   </div>
-  <p class="text-center"><a href="https://github.com/MaddMeeks/Meeks.git" target="_blank">View Source on GitHub</a></p>
 
   <ul class="nav nav-tabs" id="calculatorTabs" role="tablist">
     <li class="nav-item" role="presentation">

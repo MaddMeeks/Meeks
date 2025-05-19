@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Retirement Calculator</title>
   <meta name="description" content="Interactive Retirement Calculator by Meeks">
   <meta name="author" content="MaddMeeks">
@@ -327,8 +328,8 @@ const totalAtRetirement = afterTax401K + balanceRoth + balanceOther;
 const adjustedTotal = totalAtRetirement / Math.pow(1 + inflation, yearsToRetirement);
 
 // Monthly withdrawal over retirement years
-const monthlyWithdrawalBeforeTax = totalAtRetirement / (yearsInRetirement * 12);
-const monthlyWithdrawalAfterTax = monthlyWithdrawalBeforeTax; // Already accounted for tax in 401K
+monthlyWithdrawalBeforeTax = (adjustedTotal * (rateOfReturn - inflation)) / (
+  1 - Math.pow((1 + inflation) / (1 + rateOfReturn), yearsInRetirement)) / 12;
 
 
   // Output to results fields

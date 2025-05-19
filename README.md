@@ -1,3 +1,9 @@
+Here is my code. Can you help me add a note for the user. Under the output results within the results-card can you add:
+1) Inflation Adjusted Total (Present Value): "Note: This value is to help you understand the power your retirement money will be in todays market.
+2) Estimated Monthly Withdrawal (Present Value): "Note: One again, this value is represented in todays value but at retirement will be much higher. The idea is to help you understand the worth of your total retirement at the year you retire. This calculation is your first years monthly allowance but is taking account for inflation each year in your retirement until your balance is out based upon your expected age of life.
+
+Can you also take out the current statement from my results card.
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -211,39 +217,44 @@
         </div>
       </div>
     </div>
+<div class="tab-pane fade" id="results" role="tabpanel">
+  <div class="highlight-box">
+    <h4 class="cta mb-3">Results Summary</h4>
+    <p id="total401k"></p>
+    <p id="totalRoth"></p>
+    <p id="totalOther"></p>
 
-    <div class="tab-pane fade" id="results" role="tabpanel">
-      <div class="highlight-box">
-        <h4 class="cta mb-3">Results Summary</h4>
-        <p id="total401k"></p>
-        <p id="totalRoth"></p>
-        <p id="totalOther"></p>
-        
-        <!-- Highlighted Results -->
-        <div class="result-card">
-          <h5>Total Savings at Retirement (After Tax)</h5>
-          <p id="grandTotal" class="mb-0 fs-5 fw-bold text-success"></p>
-        </div>
-
-        <div class="result-card">
-          <h5>Inflation Adjusted Total (Present Value)</h5>
-          <p id="adjustedTotal" class="mb-0 fs-5 fw-bold text-success"></p>
-        </div>
-
-        <div class="result-card">
-          <h5>Estimated Monthly Withdrawal (Present Value)</h5>
-          <p id="monthly" class="mb-0 fs-5 fw-bold text-success"></p>
-        </div>
-      </div>
-
-      <canvas id="breakdownChart" width="400" height="200"></canvas>
-
-      <div class="mt-4 d-flex gap-2">
-        <button class="btn btn-outline-primary" onclick="downloadCSV()">Download CSV</button>
-        <button class="btn btn-outline-danger" onclick="downloadPDF()">Download PDF</button>
-        <button class="btn btn-outline-dark" onclick="downloadJSON()">Download JSON</button>
-      </div>
+    <!-- Highlighted Results -->
+    <div class="result-card">
+      <h5>Total Savings at Retirement (After Tax)</h5>
+      <p id="grandTotal" class="mb-0 fs-5 fw-bold text-success"></p>
     </div>
+
+    <div class="result-card">
+      <h5>Inflation Adjusted Total (Present Value)</h5>
+      <p id="adjustedTotal" class="mb-0 fs-5 fw-bold text-success"></p>
+      <small class="text-muted d-block mt-1">
+        Note: This value is to help you understand the power your retirement money will have in today's market.
+      </small>
+    </div>
+
+    <div class="result-card">
+      <h5>Estimated Monthly Withdrawal (Present Value)</h5>
+      <p id="monthly" class="mb-0 fs-5 fw-bold text-success"></p>
+      <small class="text-muted d-block mt-1">
+        Note: This value is represented in today's value but will be much higher at retirement. The idea is to help you understand the worth of your retirement total in the year you retire. This is your first year's monthly allowance, adjusted for inflation over your retirement years until your balance is expected to run out, based on your life expectancy.
+      </small>
+    </div>
+  </div>
+
+  <canvas id="breakdownChart" width="400" height="200"></canvas>
+
+  <div class="mt-4 d-flex gap-2">
+    <button class="btn btn-outline-primary" onclick="downloadCSV()">Download CSV</button>
+    <button class="btn btn-outline-danger" onclick="downloadPDF()">Download PDF</button>
+    <button class="btn btn-outline-dark" onclick="downloadJSON()">Download JSON</button>
+  </div>
+</div>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
